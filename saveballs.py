@@ -27,6 +27,7 @@ hsfont=pg.font.SysFont("comicsansms",30,1)
 
 
 
+
 d = shelve.open('score.txt') # here you will save the score variable
 score=d['score']
 
@@ -53,7 +54,6 @@ def startgame(scr):
         window.blit(qicon,(472,306))
         button_action(199, 305, 328, 434,"play")
         button_action(471, 305, 600, 434,"quit")
-
         start_text=startfont.render('Save the balls',True,[0,10,250])
         window.blit(start_text,(window.get_width() / 2 - start_text.get_rect().width / 2, 140))
         byme=byfont.render('By: Shivam Maurya',True,[0,0,0])
@@ -89,25 +89,21 @@ def moveball(x,y,xp,yp,bx,scr,gover):
                     xc=randint(1,3)
                 elif bx-112>x:
                     xc=randrange(-2,-1,1)
-
     elif x<=5:
         xc=randint(3,4)
     elif y<=5:
         yc=randint(4,6)
     return gover,scr,xc,yc
 
-#def goHome():
-#    startgame()
 
 def gameover(scr):
-    global score
     window.fill([250, 240, 230])
     text = overfont.render('Game Over', True, [250, 0, 0])
     yscr = overfont.render('You scored: ' + str(scr), True, [0, 50, 250])
     text_rect = text.get_rect()
     text_x = window.get_width() / 2 - text_rect.width / 2
     window.blit(text, (text_x,150 ))
-    window.blit(yscr, (window.get_width()/2 - yscr.get_rect().width/2, 236 ))
+    window.blit(yscr, (window.get_width()/2 - yscr.get_rect().width/2, 226 ))
     window.blit(ricon,(200,322))
     window.blit(qicon, (472, 322))
     button_action(200,332,328,460,"reload")
@@ -205,6 +201,5 @@ def callfps(scr):
 
 
 startgame(score)
-           # thats all, now it is saved on disk.
 d.close()
 raise SystemExit
