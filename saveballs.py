@@ -2,10 +2,13 @@ from time import sleep
 import shelve
 import pygame as pg
 from random import randint,randrange
+from gtts import gTTS
+from pygame import mixer
 
 
 #SOME STANDARD DECLARATION
 pg.init()
+mixer.init()
 gameIcon = pg.image.load('icon.jpg')
 pg.display.set_icon(gameIcon)
 window=pg.display.set_mode((800,600),0,32)
@@ -46,8 +49,15 @@ def button_action(p1,q1,p2,q2,do=None):
             pg.QUIT
             raise SystemExit
 
+def speech(str,fname):
+    #con = gTTS(text=str, lang="hi")
+    fname+=".mp3"
+    #con.save(fname)
+    mixer.music.load(fname)
+    mixer.music.play()
 
 def startgame(scr):
+    speech("Welcome!", "wel_tone")
     while True:
         window.fill([255, 240, 230])
         window.blit(sicon,(200,306))
@@ -97,25 +107,32 @@ def moveball(x,y,xp,yp,bx,scr,gover):
 
 
 def gameover(scr):
-    window.fill([250, 240, 230])
-    text = overfont.render('Game Over', True, [250, 0, 0])
-    yscr = overfont.render('You scored: ' + str(scr), True, [0, 50, 250])
-    text_rect = text.get_rect()
-    text_x = window.get_width() / 2 - text_rect.width / 2
-    window.blit(text, (text_x,150 ))
-    window.blit(yscr, (window.get_width()/2 - yscr.get_rect().width/2, 226 ))
-    window.blit(ricon,(200,322))
-    window.blit(qicon, (472, 322))
-    button_action(200,332,328,460,"reload")
-    button_action(470,332,598,460,"quit")
     if score<scr:
         d['score'] = scr
+        speech("Congrats you have created the highest score", "congo")
+    elif scr==0:
+        speech('Ooops','zero')
+    else:
+        speech("play again!", "reload_game")
+    while True:
+        window.fill([250, 240, 230])
+        text = overfont.render('Game Over', True, [250, 0, 0])
+        yscr = overfont.render('You scored: ' + str(scr), True, [0, 50, 250])
+        text_rect = text.get_rect()
+        text_x = window.get_width() / 2 - text_rect.width / 2
+        window.blit(text, (text_x,150 ))
+        window.blit(yscr, (window.get_width()/2 - yscr.get_rect().width/2, 226 ))
+        window.blit(ricon,(200,322))
+        window.blit(qicon, (472, 322))
+        button_action(200,332,328,460,"reload")
+        button_action(470,332,598,460,"quit")
 
-    for event in pg.event.get():
-        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-            pg.QUIT
-            raise SystemExit
-    pg.display.update()
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                pg.QUIT
+                raise SystemExit
+        pg.display.update()
 
 def gameplay():
     scr = 0
